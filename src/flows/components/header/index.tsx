@@ -23,6 +23,7 @@ import TimeZoneDropdown from 'src/shared/components/TimeZoneDropdown'
 import TimeRangeDropdown from 'src/flows/components/header/TimeRangeDropdown'
 import Submit from 'src/flows/components/header/Submit'
 import SaveState from 'src/flows/components/header/SaveState'
+import History from 'src/flows/components/header/History'
 import PresentationMode from 'src/flows/components/header/PresentationMode'
 import RenamablePageTitle from 'src/pageLayout/components/RenamablePageTitle'
 import {DEFAULT_PROJECT_NAME} from 'src/flows'
@@ -215,16 +216,26 @@ const FlowHeader: FC = () => {
               />
             ) : null}
             {flow?.id && (
-              <FeatureFlag name="shareNotebook">
+              <>
                 <SquareButton
-                  icon={IconFont.Share}
-                  onClick={showShare}
-                  color={
-                    !share ? ComponentColor.Default : ComponentColor.Secondary
-                  }
-                  titleText="Share Notebook"
+                  icon={IconFont.Duplicate}
+                  titleText="Clone Notebook"
                 />
-              </FeatureFlag>
+                <SquareButton
+                  icon={IconFont.Trash}
+                  titleText="Delete Notebook"
+                />
+                <FeatureFlag name="shareNotebook">
+                  <SquareButton
+                    icon={IconFont.Share}
+                    onClick={showShare}
+                    color={
+                      !share ? ComponentColor.Default : ComponentColor.Secondary
+                    }
+                    titleText="Share Notebook"
+                  />
+                </FeatureFlag>
+              </>
             )}
             <FeatureFlag name="flow-snapshot">
               <SquareButton
@@ -305,6 +316,9 @@ const FlowHeader: FC = () => {
           </Page.ControlBarRight>
         </Page.ControlBar>
       )}
+      <Page.ControlBar fullWidth>
+        <History />
+      </Page.ControlBar>
     </>
   )
 }

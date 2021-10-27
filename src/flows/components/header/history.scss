@@ -1,0 +1,73 @@
+@import '@influxdata/clockface/dist/variables.scss';
+
+.history {
+  text-align: right;
+  flex: 1 1;
+}
+
+.pending-state,
+.history-state {
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 24px;
+  position: relative;
+
+  .cf-bullet {
+    position: relative;
+    z-index: 2;
+  }
+
+  &.highlight:after,
+  &:hover:after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    bottom: -8px;
+    right: -8px;
+    border-width: 2px;
+    border-radius: 50%;
+    border-color: $g5-pepper;
+    border-style: solid;
+  }
+
+  &.highlight,
+  &.highlight:hover,
+  &:active {
+    &:after {
+      border-color: $g20-white;
+    }
+  }
+}
+
+.history-state {
+  &:before {
+    content: '';
+    position: absolute;
+    height: 2px;
+    background: $g5-pepper;
+    top: 50%;
+    left: -24px;
+    right: -24px;
+  }
+
+  &:first-of-type:before {
+    left: 0;
+  }
+
+  &:last-of-type:before {
+    right: 0;
+  }
+
+  .cf-bullet {
+    background: $c-honeydew;
+    color: $g20-white;
+  }
+}
+
+.pending-state {
+  .cf-bullet {
+    background: $g5-pepper;
+    color: $g20-white;
+  }
+}
