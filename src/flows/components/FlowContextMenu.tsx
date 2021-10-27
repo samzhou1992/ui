@@ -119,6 +119,16 @@ const FlowContextMenu: FC<Props> = ({id, name, isPinned}) => {
             >
               Clone
             </List.Item>
+            {name.toLowerCase().includes('draft') ? null : (
+              <List.Item
+                onClick={() => console.log('huh')}
+                size={ComponentSize.Small}
+                style={{fontWeight: 500}}
+                testID="context-clone-flow"
+              >
+                History
+              </List.Item>
+            )}
             {isFlagEnabled('pinnedItems') && CLOUD && (
               <List.Item
                 onClick={handlePinFlow}

@@ -33,18 +33,33 @@ const SaveState: FC = () => {
   if (!flow.id) {
     return (
       <Button
-        text="Save Notebook"
+        text="Publish Notebook"
         color={ComponentColor.Success}
         type={ButtonType.Submit}
         onClick={addFlow}
         status={ComponentStatus.Default}
-        testID="notebook-save"
-        titleText="Save Notebook"
+        testID="notebook-Publish"
+        titleText="Publish Notebook"
       />
     )
   }
 
-  return <div className="flow-header--saving">Autosaved</div>
+  if (flow.name.toLowerCase().includes('draft')) {
+    return (
+      <Button
+        text="Publish Notebook"
+        color={ComponentColor.Success}
+        type={ButtonType.Submit}
+        onClick={() => console.log('publish')}
+        status={ComponentStatus.Default}
+        testID="notebook-Publish"
+        titleText="Publish Notebook"
+      />
+    )
+  }
+
+  return null
+  // return <div className="flow-header--saving">Autosaved</div>
 }
 
 export default SaveState

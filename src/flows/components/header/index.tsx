@@ -9,11 +9,14 @@ import {AppSettingProvider} from 'src/shared/contexts/app'
 
 // Components
 import {
+  ConfirmationButton,
   Page,
   SquareButton,
   IconFont,
   ComponentColor,
+  ButtonShape,
   ComponentStatus,
+  ComponentSize,
   Dropdown,
 } from '@influxdata/clockface'
 import TimeZoneDropdown from 'src/shared/components/TimeZoneDropdown'
@@ -199,6 +202,18 @@ const FlowHeader: FC = () => {
             <PresentationMode />
             <TimeZoneDropdown />
             <TimeRangeDropdown />
+            {flow.name.toLowerCase().includes('draft') ? (
+              <ConfirmationButton
+                color={ComponentColor.Danger}
+                icon={IconFont.Trash_New}
+                shape={ButtonShape.Square}
+                size={ComponentSize.Small}
+                confirmationLabel="Yes, delete this Draft Notebook"
+                onConfirm={() => console.log('deleted')}
+                confirmationButtonText="Confirm"
+                testID="context-delete-menu"
+              />
+            ) : null}
             {flow?.id && (
               <FeatureFlag name="shareNotebook">
                 <SquareButton

@@ -71,7 +71,7 @@ export const FlowProvider: FC = ({children}) => {
   useEffect(() => {
     if (isFlagEnabled('sharedFlowEditing')) {
       provider.current = new WebsocketProvider(
-        'wss://demos.yjs.dev', // todo(ariel): replace this with an actual API that we setup
+        'ws://localhost:1223/', // todo(ariel): replace this with an actual API that we setup
         flowId, // todo(ariel): we might need to confine this to an org, depends on how multi-org plays out
         yDoc.current
       )

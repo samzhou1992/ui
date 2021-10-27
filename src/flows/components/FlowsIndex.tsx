@@ -1,6 +1,12 @@
 // Libraries
 import React, {useState, useContext, useRef} from 'react'
-import {DapperScrollbars, Sort} from '@influxdata/clockface'
+import {
+  DapperScrollbars,
+  Sort,
+  Tabs,
+  Orientation,
+  ComponentSize,
+} from '@influxdata/clockface'
 
 // Components
 import {Page, PageHeader} from '@influxdata/clockface'
@@ -25,6 +31,7 @@ import PresetFlowsButtons from './PresetFlowsButtons'
 const FlowsIndex = () => {
   const fadingBoxRef = useRef()
   const [showButtonMode, setShowButtonMode] = useState(false)
+  const [activeTab, setActiveTab] = useState<'published' | 'draft'>('published')
 
   const fadeOutOnScroll = element => {
     const header = document.getElementsByClassName('cf-page-header')[0]
@@ -90,10 +97,17 @@ const FlowsIndex = () => {
     )
   })
   const flowList = {
-    flows: sortedFlows.reduce((acc, curr) => {
-      acc[curr] = flows[curr]
-      return acc
-    }, {}),
+    flows: sortedFlows
+      .filter(id => {
+        if (activeTab === 'draft') {
+          return flows[id].name.toLowerCase().includes('draft')
+        }
+        return !flows[id].name.toLowerCase().includes('draft')
+      })
+      .reduce((acc, curr) => {
+        acc[curr] = flows[curr]
+        return acc
+      }, {}),
   }
 
   const setSort = (sortKey, sortDirection, sortType) => {
@@ -169,8 +183,21 @@ const FlowsIndex = () => {
             </Page.ControlBarLeft>
           </Page.ControlBar>
         </Page.Contents>
-
         <Page.Contents fullWidth={false}>
+          <Tabs orientation={Orientation.Horizontal} size={ComponentSize.Large}>
+            <Tabs.Tab
+              text="Published"
+              id="published"
+              onClick={() => setActiveTab('published')}
+              active={activeTab === 'published'}
+            />
+            <Tabs.Tab
+              text="Draft"
+              id="draft"
+              onClick={() => setActiveTab('draft')}
+              active={activeTab === 'draft'}
+            />
+          </Tabs>
           <FlowCards flows={flowList} search={search} />
         </Page.Contents>
       </DapperScrollbars>
