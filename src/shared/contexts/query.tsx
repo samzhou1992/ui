@@ -1,12 +1,9 @@
 import React, {FC, useEffect, useRef} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import {useSelector} from 'react-redux'
 import {v4 as UUID} from 'uuid'
 import {parse, format_from_js_file} from '@influxdata/flux'
 
 import {getOrg} from 'src/organizations/selectors'
-import {getBuckets} from 'src/buckets/actions/thunks'
-import {getSortedBuckets} from 'src/buckets/selectors'
-import {getStatus} from 'src/resources/selectors'
 import {fromFlux} from '@influxdata/giraffe'
 import {
   FluxResult,
@@ -32,9 +29,6 @@ import {isFlagEnabled} from 'src/shared/utils/featureFlag'
 
 // Types
 import {
-  AppState,
-  ResourceType,
-  RemoteDataState,
   OptionStatement,
   VariableAssignment,
   ObjectExpression,
@@ -532,20 +526,8 @@ export const parseQuery = (() => {
 })()
 
 export const QueryProvider: FC = ({children}) => {
-  const buckets = useSelector((state: AppState) => getSortedBuckets(state))
-  const bucketsLoadingState = useSelector((state: AppState) =>
-    getStatus(state, ResourceType.Buckets)
-  )
   const pending = useRef({} as CancelMap)
   const org = useSelector(getOrg)
-
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    if (bucketsLoadingState === RemoteDataState.NotStarted) {
-      dispatch(getBuckets())
-    }
-  }, [bucketsLoadingState, dispatch])
 
   // this one cancels all pending queries when you
   // navigate away from the query provider
@@ -555,28 +537,10 @@ export const QueryProvider: FC = ({children}) => {
     }
   }, [])
 
-  const _getOrg = ast => {
-    const queryBuckets = find(
-      ast,
-      node =>
-        node?.type === 'CallExpression' &&
-        node?.callee?.type === 'Identifier' &&
-        node?.callee?.name === 'from' &&
-        node?.arguments[0]?.properties[0]?.key?.name === 'bucket'
-    ).map(node => node?.arguments[0]?.properties[0]?.value.value)
-
-    return (
-      buckets.find(buck => queryBuckets.includes(buck.name))?.orgID || org.id
-    )
-  }
-
   const basic = (text: string, override?: QueryScope) => {
     const query = simplify(text, override?.vars || {})
 
-    // Here we grab the org from the contents of the query, in case it references a sampledata bucket
-    const orgID =
-      override?.org ||
-      _getOrg(isFlagEnabled('fastFlows') ? parseQuery(query) : parse(query))
+    const orgID = override?.org || org.id
 
     const url = `${override?.region ||
       window.location.origin}/api/v2/query?${new URLSearchParams({orgID})}`
@@ -709,10 +673,6 @@ export const QueryProvider: FC = ({children}) => {
             error: null,
           } as FluxResult)
       )
-  }
-
-  if (bucketsLoadingState !== RemoteDataState.Done) {
-    return null
   }
 
   return (

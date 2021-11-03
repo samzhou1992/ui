@@ -123,9 +123,15 @@ export class LSPServer {
   private documentVersions: {[key: string]: number} = {}
   public store: Store<AppState & LocalStorage>
 
-  constructor(server: WASMServer, reduxStore = getStore()) {
+  constructor(
+    server: WASMServer,
+    supportDemoData = true,
+    reduxStore = getStore()
+  ) {
     this.server = server
-    this.server.register_buckets_callback(this.getBuckets)
+    this.server.register_buckets_callback(
+      supportDemoData ? this.getAllBuckets : this.getUserBuckets
+    )
     this.server.register_measurements_callback(this.getMeasurements)
     this.server.register_tag_keys_callback(this.getTagKeys)
     this.server.register_tag_values_callback(this.getTagValues)
@@ -154,7 +160,25 @@ export class LSPServer {
     }
   }
 
-  getBuckets = async () => {
+  getUserBuckets = async () => {
+    try {
+      const org = getOrg(this.store.getState())
+
+      let limit = BUCKET_LIMIT
+      if (isFlagEnabled('fetchAllBuckets')) {
+        // a limit of -1 means fetch all buckets for this org
+        limit = -1
+      }
+
+      const {normalizedBuckets} = await fetchAllBuckets(org.id, limit)
+      return Object.values(normalizedBuckets.entities.buckets).map(b => b.name)
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+  }
+
+  getAllBuckets = async () => {
     try {
       const org = getOrg(this.store.getState())
 
