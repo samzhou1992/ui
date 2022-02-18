@@ -17,7 +17,6 @@ import {
 
 // Components
 import Handle from 'src/flows/components/panel/Handle'
-import InsertCellButton from 'src/flows/components/panel/InsertCellButton'
 import FlowPanelTitle from 'src/flows/components/panel/FlowPanelTitle'
 import {MenuButton} from 'src/flows/components/Sidebar'
 
@@ -155,7 +154,6 @@ const FlowPanel: FC<Props> = ({
   }
 
   return (
-    <>
       <div className={panelClassName} id={id}>
         <div className="flow-panel--header">
           <div className="flow-panel--node-wrapper">
@@ -208,8 +206,6 @@ const FlowPanel: FC<Props> = ({
           )}
         </div>
       </div>
-      {!flow.readOnly && <InsertCellButton id={id} />}
-    </>
   )
 }
 

@@ -2,6 +2,7 @@
 import React, {FC, useContext} from 'react'
 import {useSelector} from 'react-redux'
 import ReactGridLayout, {WidthProvider, Layout} from 'react-grid-layout'
+import {InfluxColors, InfluxDataLogo, Page, FlexBox,  FlexDirection, AlignItems, ComponentSize} from '@influxdata/clockface'
 
 // Contexts
 import {FlowContext} from 'src/flows/context/flow.current'
@@ -12,8 +13,8 @@ import FlowPipe from 'src/flows/components/FlowPipe'
 import PresentationPipe from 'src/flows/components/PresentationPipe'
 import EmptyPipeList from 'src/flows/components/EmptyPipeList'
 import InsertCellButton from 'src/flows/components/panel/InsertCellButton'
-import {InfluxColors, InfluxDataLogo, Page} from '@influxdata/clockface'
 import TimeRangeLabel from 'src/flows/components/header/TimeRangeLabel'
+import AddButtons from 'src/flows/components/AddButtons'
 
 import {LAYOUT_MARGIN, DASHBOARD_LAYOUT_ROW_HEIGHT} from 'src/shared/constants'
 
@@ -133,14 +134,33 @@ const PipeList: FC = () => {
     )
   }
 
-  const _pipes = flow.data.allIDs.map(id => {
-    return <FlowPipe key={`pipe-${id}`} id={id} />
-  })
+  const _pipes = flow.data.allIDs.reduce((acc, id, idx) => {
+    if (idx === 0) {
+      acc.push(<InsertCellButton />)
+    }
+
+    acc.push(<FlowPipe key={`pipe-${id}`} id={id} />)
+
+    if (idx !== flow.data.allIDs.length - 1) {
+      acc.push(<InsertCellButton id={id} />)
+    } else {
+      acc.push(
+          <FlexBox
+            direction={FlexDirection.Column}
+            alignItems={AlignItems.Stretch}
+            margin={ComponentSize.Small}
+            className="insert-cell-menu"
+          >
+            <AddButtons index={idx}/>
+          </FlexBox>
+      )
+    }
+    return acc
+  }, [])
 
   return (
     <div className="flow" id={flow?.id}>
       <HiddenHeader />
-      <InsertCellButton />
       {_pipes}
     </div>
   )

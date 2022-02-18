@@ -51,6 +51,10 @@ const InsertCellButton: FC<Props> = ({id}) => {
       dividerRef.current.classList.remove('flow-divider__popped')
   }
 
+  if (flow.readOnly) {
+    return
+  }
+
   return (
     <div className="flow-divider" ref={dividerRef}>
       <SquareButton
