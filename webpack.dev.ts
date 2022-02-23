@@ -12,20 +12,27 @@ const webpack = require('webpack')
 module.exports = merge(common, {
   mode: 'development',
   devtool: 'cheap-inline-source-map',
-  output: {
-    filename: '[name].js',
-  },
   watchOptions: {
     aggregateTimeout: 300,
     poll: 1000,
   },
   devServer: {
-    hot: true,
-    historyApiFallback: {
-      index: `${BASE_PATH}/index.html`,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
     },
+    historyApiFallback: true,
+    hot: false,
+    watchContentBase: false,
+    liveReload: false,
+    // historyApiFallback: {
+    //   index: `${BASE_PATH}/index.html`,
+    // },
     compress: true,
     proxy: {
+      '/influx': {
+        target: 'http://localhost:8086',
+        pathRewrite: { '^/influx': '' },
+      },
       '/api/v2': 'http://localhost:8086',
       '/debug/flush': 'http://localhost:8086',
       '/oauth': 'http://localhost:8086',

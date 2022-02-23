@@ -16,7 +16,7 @@
     "src": "./src"
   },
   "scripts": {
-    "start": "yarn install && yarn generate && cross-env TS_NODE_PROJECT=\"webpack.tsconfig.json\" && yarn run build:vendor && yarn run start:dev",
+    "start": "yarn install && yarn generate-local && cross-env TS_NODE_PROJECT=\"webpack.tsconfig.json\" && yarn run build:vendor && yarn run start:dev",
     "start:cloud": "yarn install && yarn generate && cross-env TS_NODE_PROJECT=\"webpack.tsconfig.json\" && yarn run build:vendor && yarn run start:dev-cloud",
     "start:dev": "webpack-dev-server --config ./webpack.dev.ts --progress false",
     "start:dev-cloud": "cross-env CLOUD_LOGOUT_URL=http://localhost:8080/api/v2/signout CLOUD_URL=http://localhost:4000 webpack-dev-server --config ./webpack.dev.ts",
@@ -52,8 +52,8 @@
     "cy": "CYPRESS_dexUrl=https://$INGRESS_HOST:$PORT_HTTPS CYPRESS_baseUrl=http://localhost:9999 cypress open",
     "cy:dev": "source ../monitor-ci/.env && CYPRESS_dexUrl=CLOUD CYPRESS_baseUrl=https://$INGRESS_HOST:$PORT_HTTPS cypress open --config testFiles='{cloud,shared}/**/*.*'",
     "cy:dev-oss": "source ../monitor-ci/.env && CYPRESS_dexUrl=OSS CYPRESS_baseUrl=https://$INGRESS_HOST:$PORT_HTTPS cypress open --config testFiles='{oss,shared}/**/*.*'",
-    "generate": "export SHA=ecdcd4b1baace6942e567771518ba19caf381652 && export REMOTE=https://raw.githubusercontent.com/influxdata/openapi/${SHA}/ && yarn generate-meta",
-    "generate-local": "export REMOTE=../openapi/ && yarn generate-meta",
+    "generate": "export REMOTE=./openapi/ && yarn generate-meta",
+    "generate-local": "export REMOTE=./openapi/ && yarn generate-meta",
     "generate-meta": "if [ -z \"${CLOUD_URL}\" ]; then yarn generate-meta-oss; else yarn generate-meta-cloud; fi",
     "generate-meta-oss": "yarn oss-api && yarn notebooks && yarn unity && yarn annotations-oss && yarn pinned && yarn mapsd-oss && yarn cloudPriv",
     "generate-meta-cloud": "yarn cloud-api && yarn notebooks && yarn unity && yarn annotations && yarn cloudPriv && yarn pinned && yarn mapsd",

@@ -1,9 +1,13 @@
+// @ts-ignore
+if (window.__POWERED_BY_QIANKUN__) {
+  // @ts-ignore
+  __webpack_public_path__ = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__;
+}
 import 'babel-polyfill'
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
-
 // Libraries
-import React, {PureComponent, Suspense} from 'react'
-import {render} from 'react-dom'
+import React, {Suspense, useEffect} from 'react'
+import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
 import {Route} from 'react-router-dom'
 import {ConnectedRouter} from 'connected-react-router'
@@ -22,6 +26,7 @@ import {
   updateReportingContext,
   updateCampaignInfo,
 } from 'src/cloud/utils/reporting'
+import {getBrowserBasepath} from 'src/utils/basepath'
 
 // Constants
 import {CLOUD} from 'src/shared/constants'
@@ -33,6 +38,7 @@ import {disablePresentationMode} from 'src/shared/actions/app'
 import 'src/style/chronograf.scss'
 import '@influxdata/clockface/dist/index.css'
 import '@docsearch/css'
+import 'src/style/global.scss'
 const rootNode = getRootNode()
 
 const SESSION_KEY = 'session'
@@ -74,20 +80,35 @@ window.addEventListener('keyup', event => {
   }
 })
 
-class Root extends PureComponent {
-  public render() {
-    return (
-      <Provider store={getStore()}>
-        <ConnectedRouter history={history}>
-          <Suspense fallback={<PageSpinner />}>
-            <Route component={Setup} />
-          </Suspense>
-        </ConnectedRouter>
-      </Provider>
-    )
-  }
+const Root: React.FC<{masterHistory?: any}> = ({masterHistory}) => {
+
+  useEffect(() => {
+    const basename = getBrowserBasepath()
+    const unListen = masterHistory?.listen((location) => {
+      if (location.pathname.startsWith('/data-analysis')) {
+        history.replace(location.pathname.slice(basename.length))
+      }
+    });
+    return () => unListen && unListen()
+  },[])
+
+  return (<Provider store={getStore()}>
+    <ConnectedRouter history={history}>
+      <Suspense fallback={<PageSpinner/>}>
+        <Route component={Setup}/>
+      </Suspense>
+    </ConnectedRouter>
+  </Provider>
+  )
 }
 
-if (rootNode) {
-  render(<Root />, rootNode)
+export function render(props) {
+  const { container, masterHistory } = props;
+  ReactDOM.render(<Root masterHistory={masterHistory}/>, container ? container.querySelector('#influx-root') : document.querySelector('#influx-root'));
 }
+
+// @ts-ignore
+if (!window.__POWERED_BY_QIANKUN__) {
+  ReactDOM.render(<Root />, rootNode)
+}
+

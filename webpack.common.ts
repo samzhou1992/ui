@@ -20,6 +20,11 @@ module.exports = {
     publicPath: BASE_PATH,
     webassemblyModuleFilename: `${STATIC_DIRECTORY}[modulehash:10].wasm`,
     sourceMapFilename: `${STATIC_DIRECTORY}[file].map[query]`,
+    library: `influxdb-ui-[name]`,
+    libraryTarget: 'umd',
+    jsonpFunction: `webpackJsonp_influxdb-ui`,
+    globalObject: 'window',
+    chunkFilename: './assets/chunks/[name].chunk.js',
   },
   entry: {
     app: './src/bootstrap.ts',

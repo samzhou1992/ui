@@ -85,7 +85,7 @@ const App: FC = () => {
         <OverlayController />
       </OverlayProviderComp>
       <EngagementLink />
-      <TreeNav />
+      {/*<TreeNav />*/}
       <Suspense fallback={<PageSpinner />}>
         <Switch>
           <Route path="/orgs/new" component={CreateOrgOverlay} />

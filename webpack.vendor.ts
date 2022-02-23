@@ -1,7 +1,7 @@
 export {}
 const webpack = require('webpack')
 const path = require('path')
-const {dependencies} = require('./package.json')
+const {dependencies, name} = require('./package.json')
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 // only dll infrequently updated dependencies
@@ -41,7 +41,10 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'build'),
     filename: '[name].bundle.js',
-    library: '[name]',
+    library: `${name}-[name]`,
+    libraryTarget: 'umd',
+    jsonpFunction: `webpackJsonp_${name}`,
+    globalObject: 'window',
   },
   module: {
     rules: [

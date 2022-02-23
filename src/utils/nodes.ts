@@ -1,1 +1,1 @@
-export const getRootNode = () => document.getElementById('react-root')
+export const getRootNode = () => document.getElementById('influx-root')
