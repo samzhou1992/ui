@@ -11,18 +11,15 @@ import ReactDOM from 'react-dom'
 // that no one else needs to worry about it again.
 import('./index').catch(e => console.error('Error importing `index.tsx`:', e))
 
-// export async function bootstrap() {
-//   console.log('react app bootstraped');
-// }
+export async function bootstrap() {
+}
 
 export async function mount(props) {
-  // console.log('mount: props from main framework', props);
   const indexModule = await import('./index')
   indexModule.render(props)
 }
 
 export async function unmount(props) {
   const { container } = props;
-  // console.log('unmount: props from main framework', props);
   ReactDOM.unmountComponentAtNode(container ? container.querySelector('#influx-root') : document.querySelector('#influx-root'));
 }
