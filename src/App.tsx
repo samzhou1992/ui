@@ -15,6 +15,7 @@ import {reportErrorThroughHoneyBadger} from 'src/shared/utils/errors'
 
 // Components
 import {AppWrapper} from '@influxdata/clockface'
+import TreeNav from 'src/pageLayout/containers/TreeNav'
 import TooltipPortal from 'src/portals/TooltipPortal'
 import NotesPortal from 'src/portals/NotesPortal'
 import Notifications from 'src/shared/components/notifications/Notifications'
@@ -84,6 +85,7 @@ const App: FC = () => {
         <OverlayController />
       </OverlayProviderComp>
       <EngagementLink />
+      {window.__POWERED_BY_QIANKUN__ ? null: <TreeNav/>}
       <Suspense fallback={<PageSpinner />}>
         <Switch>
           <Route path="/orgs/new" component={CreateOrgOverlay} />

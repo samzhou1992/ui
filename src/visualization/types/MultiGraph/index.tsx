@@ -5,8 +5,8 @@ import view from './view'
 
 export default register => {
   register({
-    type: 'xy',
-    name: 'Graph',
+    type: 'multi-xy',
+    name: 'Split Graphs',
     graphic: icon,
     component: view,
     initial: properties,

@@ -216,6 +216,18 @@ const NEW_VIEW_CREATORS = {
       position: 'overlaid',
     },
   }),
+  'multi-xy': (): NewView<XYViewProperties> => ({
+    ...defaultView(),
+    properties: {
+      ...defaultLineViewProperties(),
+      type: 'multi-xy',
+      shape: 'chronograf-v2',
+      geom: 'line',
+      xColumn: null,
+      yColumn: null,
+      position: 'overlaid',
+    },
+  }),
   band: (): NewView<BandViewProperties> => ({
     ...defaultView(),
     properties: {

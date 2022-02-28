@@ -11,7 +11,7 @@ const webpack = require('webpack')
 
 module.exports = merge(common, {
   mode: 'development',
-  devtool: 'cheap-inline-source-map',
+  devtool: 'eval-source-map',
   watchOptions: {
     aggregateTimeout: 300,
     poll: 1000,
@@ -21,7 +21,7 @@ module.exports = merge(common, {
       'Access-Control-Allow-Origin': '*',
     },
     historyApiFallback: true,
-    hot: false,
+    hot: true,
     watchContentBase: false,
     liveReload: false,
     // historyApiFallback: {
