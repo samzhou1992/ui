@@ -1,5 +1,5 @@
 // Libraries
-import React, {useMemo, useContext} from 'react'
+import React, {useMemo, useContext, useEffect, useCallback, useRef, MutableRefObject} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {
   Config,
@@ -59,6 +59,8 @@ interface Props {
   timeRange: VisualizationProps['timeRange'];
   annotations: VisualizationProps['annotations'];
   cellID: VisualizationProps['cellID'];
+  register: (graph: MutableRefObject<HTMLDivElement>) => void;
+  broadcast: (e: MouseEvent, elementY: number) => void;
 }
 
 const SingleGraph: React.FC<Props> = ({
@@ -69,6 +71,8 @@ const SingleGraph: React.FC<Props> = ({
   timeRange,
   annotations,
   cellID,
+  register,
+  broadcast,
 }) => {
   const {theme, timeZone} = useContext(AppSettingContext)
   const axisTicksOptions = useAxisTicksGenerator(properties)
@@ -78,6 +82,36 @@ const SingleGraph: React.FC<Props> = ({
   const tooltipOrientationThreshold = properties.legendOrientationThreshold
   const staticLegend = useStaticLegend(properties)
   const dispatch = useDispatch()
+  const ref = useRef<HTMLDivElement>(null)
+
+  const broadcastMouseMove = useCallback((e: MouseEvent) => {
+    if (!e.isTrusted) {
+      // console.log('get dispatched mouse move', e)
+      return
+    }
+    // console.log('get native mouse move', e)
+    const event = new MouseEvent('mousemove', {clientX: e.clientX, clientY: e.clientY, screenX: e.screenX, screenY: e.screenY})
+    const {top} = ref.current.getBoundingClientRect()
+    broadcast(event, top)
+  }, [])
+
+  const broadcastMouseEnter = useCallback((e: MouseEvent) => {
+    if (!e.isTrusted) {
+      console.log('get dispatched mouse enter', e)
+      return
+    }
+    console.log('get native mouse enter', e)
+    const event = new MouseEvent('mouseenter', {clientX: e.clientX, clientY: e.clientY, screenX: e.screenX, screenY: e.screenY})
+    const {top} = ref.current.getBoundingClientRect()
+    broadcast(event, top)
+  }, [])
+
+  useEffect(() => {
+    register(ref)
+    ref.current.addEventListener('mousemove', broadcastMouseMove)
+    ref.current.addEventListener('mouseenter', broadcastMouseEnter)
+  }, [])
+
 
   // these two values are set in the dashboard, and used whether or not this view
   // is in a dashboard or in configuration/single cell popout mode
@@ -237,7 +271,6 @@ const SingleGraph: React.FC<Props> = ({
     annotations,
     dispatch
   )
-
   return <Plot config={config}/>
 }
 
