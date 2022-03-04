@@ -48,7 +48,7 @@ const TimeMachine: FunctionComponent<StateProps> = ({
     <>
       {isViewingVisOptions && <ViewOptions />}
       <div className={containerClassName}>
-        <DraggableResizer
+        <DraggableResizer  className="time-machine-scroll"
           handleOrientation={Orientation.Horizontal}
           handlePositions={dragPosition}
           onChangePositions={setDragPosition}

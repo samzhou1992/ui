@@ -35,6 +35,7 @@
 
 .time-machine--bottom-contents {
   /* overflow: hidden; */
+  min-height: 300px;
   width: 100%;
   flex: 0 0 100%;
 }
@@ -63,4 +64,8 @@
   > .cell--view-empty {
     justify-content: flex-end;
   }
+}
+
+.time-machine-scroll {
+  overflow-y: scroll;
 }

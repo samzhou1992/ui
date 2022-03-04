@@ -21,7 +21,7 @@ module.exports = merge(common, {
       'Access-Control-Allow-Origin': '*',
     },
     historyApiFallback: true,
-    hot: true,
+    hot: false,
     watchContentBase: false,
     liveReload: false,
     // historyApiFallback: {
