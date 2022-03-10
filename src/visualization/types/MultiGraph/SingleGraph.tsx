@@ -86,7 +86,6 @@ const SingleGraph: React.FC<Props> = ({
 
   const broadcastMouseMove = useCallback((e: MouseEvent) => {
     if (!e.isTrusted) {
-      // console.log('get dispatched mouse move', e)
       return
     }
     // console.log('get native mouse move', e)
@@ -97,10 +96,8 @@ const SingleGraph: React.FC<Props> = ({
 
   const broadcastMouseEnter = useCallback((e: MouseEvent) => {
     if (!e.isTrusted) {
-      console.log('get dispatched mouse enter', e)
       return
     }
-    console.log('get native mouse enter', e)
     const event = new MouseEvent('mouseenter', {clientX: e.clientX, clientY: e.clientY, screenX: e.screenX, screenY: e.screenY})
     const {top} = ref.current.getBoundingClientRect()
     broadcast(event, top)
@@ -271,7 +268,7 @@ const SingleGraph: React.FC<Props> = ({
     annotations,
     dispatch
   )
-  return <Plot config={config}/>
+  return <div ref={ref}><Plot config={config}/></div>
 }
 
 export default SingleGraph

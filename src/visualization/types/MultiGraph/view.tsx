@@ -25,14 +25,16 @@ const XYPlot: React.FC<Props> = ({
   const register = useCallback((graph) => {graphs.push(graph)}, [])
   const broadcast = useCallback((e: MouseEvent, elementY: number) => {
     graphs.forEach((graph) => {
+      if (!graph.current) {
+        return
+      }
       const {top, bottom} = graph.current.getBoundingClientRect()
       if (e.clientY > top && e.clientY < bottom) {
         return
       }
       const offsetY = top - elementY
-      console.log('clientY', e.clientY + offsetY)
-      const event = new MouseEvent(e.type,{relatedTarget: graph.current, clientX: e.clientX, clientY: e.clientY + offsetY, screenX: e.screenX, screenY: e.screenY + offsetY})
-      graph.current.getElementsByClassName('giraffe-fixedsizer')[0].getElementsByClassName('giraffe-plot')[0].getElementsByClassName('giraffe-axes')[0].dispatchEvent(event)
+      const event = new MouseEvent(e.type,{bubbles: true, relatedTarget: graph.current, clientX: e.clientX, clientY: e.clientY + offsetY, screenX: e.screenX, screenY: e.screenY + offsetY})
+      graph.current.getElementsByClassName('giraffe-inner-plot')[0].dispatchEvent(event)
     })
   }, [])
   const timeMachine = useSelector(activeTimeMachineSelector)
@@ -44,6 +46,7 @@ const XYPlot: React.FC<Props> = ({
         const result = fromFlux(file)
         return <SingleGraph key={i} height={height/graphNum} width={width} properties={properties} result={result} timeRange={timeRange} annotations={annotations} cellID={cellID} register={register} broadcast={broadcast}/>
       })}
+
     </AutoSizer>)
 }
 
