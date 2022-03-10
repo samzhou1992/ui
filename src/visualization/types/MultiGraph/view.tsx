@@ -42,9 +42,9 @@ const XYPlot: React.FC<Props> = ({
 
   return (
     <AutoSizer className="giraffe-autosizer" style={{height: '100%', width: '100%'}}>
-      {({width, height}) => timeMachine.queryResults.files.map((file, i) => {
+      {({width, height}) => timeMachine.queryResults.files.map(file => {
         const result = fromFlux(file)
-        return <SingleGraph key={i} height={height/graphNum} width={width} properties={properties} result={result} timeRange={timeRange} annotations={annotations} cellID={cellID} register={register} broadcast={broadcast}/>
+        return <SingleGraph key={Math.random()} height={height/graphNum} width={width} properties={properties} result={result} timeRange={timeRange} annotations={annotations} cellID={cellID} register={register} broadcast={broadcast}/>
       })}
 
     </AutoSizer>)
